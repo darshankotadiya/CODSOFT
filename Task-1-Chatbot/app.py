@@ -1,91 +1,62 @@
 import streamlit as st
 import time
 
-# =================================================================
-# PROJECT: NEURAL-LOGIC RULE-BASED CHATBOT (TASK 1)
-# DEVELOPER: DARSHAN KOTADIYA
-# INTERNSHIP: CODSOFT AI
-# =================================================================
+# --- PROJECT: NEXUS-AI LOGIC ENGINE (TASK 1) ---
+st.set_page_config(page_title="Nexus-AI Assistant", page_icon="⚡", layout="wide")
 
-# Page Configuration for a professional look
-st.set_page_config(page_title="Nexus-AI Assistant", page_icon="🤖", layout="wide")
-
-# --- SIDEBAR: INSTRUCTIONS & ABOUT ---
 with st.sidebar:
-    st.title("👤 Developer Profile")
+    st.title("👤 Developer")
     st.markdown("""
     **Name:** Darshan Kotadiya  
-    **Role:** MERN Stack & AI Research Intern  
+    Role: MERN Stack & AI Research Intern
     
-    [LinkedIn Profile](https://www.linkedin.com/in/darshan-kotadiya-70416a251/)  
-    [GitHub Repository](https://github.com/darshankotadiya/CODSOFT)
+    [🔗 LinkedIn](https://www.linkedin.com/in/darshankotadiya)  
+    [📂 GitHub](https://github.com/darshankotadiya/CODSOFT)
     """)
-    
     st.divider()
-    
-    st.title("📖 How to Interact?")
-    st.info("""
-    Since this is a **Rule-Based AI**, please use the following keywords for the best experience:
-    - **Greetings:** 'Hello', 'Hi', 'Hey'
-    - **Identity:** 'Who are you?', 'Your name?'
-    - **Capabilities:** 'What can you do?'
-    - **Status:** 'How are you?'
-    - **Tech Info:** 'MERN', 'Project'
-    - **Exit:** 'Bye', 'Quit', 'Exit'
-    """)
-    
-    st.success("Tip: This bot uses pattern matching to identify user intent!")
+    st.info("Supported Commands: 'Who are you?', 'MERN Stack', 'System Status', 'EduSmart Project'")
 
-# --- MAIN CHAT INTERFACE ---
-st.title("🤖 Nexus-AI: Professional Rule-Based Assistant")
-st.caption("A CodSoft Internship Project - Task 1")
+st.title("⚡ Nexus-AI: Rule-Based Logic Assistant")
+st.write("---")
 
-# Initializing Chat History
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
-# Core Logic Function (Rule-Based Pattern Matching)
-def get_bot_response(user_input):
+def get_logic_response(user_input):
     query = user_input.lower().strip()
     
-    # Matching logic
-    if any(word in query for word in ["hello", "hi", "hey", "greetings"]):
-        return "Greetings! I am Nexus-AI. How can I assist your workflow today?"
+    if any(x in query for x in ["who are you", "identity", "name"]):
+        return "I am Nexus-AI, a rule-based logic engine developed by Darshan for CodSoft."
     
-    elif "who are you" in query or "name" in query or "identity" in query:
-        return "I am Nexus-AI, a rule-based engine developed by Darshan for the CodSoft Internship."
+    elif any(x in query for x in ["darshan", "mern", "creator"]):
+        return "Darshan is a MERN Stack Developer specializing in AI integrations and scalable web apps."
     
-    elif "how are you" in query or "status" in query:
-        return "System status: Healthy. Latency: Minimal. I am functioning at peak efficiency!"
+    elif "edusmart" in query or "project" in query:
+        return "The creator is currently building 'EduSmart-Pro AI', a next-gen LMS due in March 2026."
     
-    elif "what can you do" in query or "capabilities" in query:
-        return "I can execute predefined logic gates, recognize language patterns, and provide internship metadata."
+    elif any(x in query for x in ["how are you", "status", "health"]):
+        return "Operational status: 100%. All rule-based logic gates are functioning optimally."
     
-    elif "mern" in query or "project" in query:
-        return "My creator, Darshan, is a MERN Stack expert currently building 'EduSmart-Pro AI'!"
+    elif any(x in query for x in ["hi", "hello", "hey"]):
+        return "Hello! I am Nexus-AI. Please enter a command to trigger my logic gates."
     
-    elif any(word in query for word in ["bye", "exit", "quit"]):
-        return "Deactivating session. Thank you for the interaction. Have a productive day!"
+    elif any(x in query for x in ["bye", "exit", "quit"]):
+        return "Terminating session. Have a productive day ahead!"
     
     else:
-        return "Query unrecognized. Please refer to the sidebar for supported keywords."
+        return "Command unrecognized. Please consult the sidebar for a list of supported logic triggers."
 
-# Displaying Chat History
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+for chat in st.session_state.chat_history:
+    with st.chat_message(chat["role"]):
+        st.markdown(chat["content"])
 
-# User Interaction Input
-if prompt := st.chat_input("Enter your command here..."):
-    # Add user message to history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+if prompt := st.chat_input("Enter logic command..."):
+    st.session_state.chat_history.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Generate and display response
-    response = get_bot_response(prompt)
-    time.sleep(0.4) # Simulating processing time
-    
     with st.chat_message("assistant"):
+        time.sleep(0.4)
+        response = get_logic_response(prompt)
         st.markdown(response)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.session_state.chat_history.append({"role": "assistant", "content": response})
