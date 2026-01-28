@@ -1,2 +1,0 @@
-# CODSOFT
-Codsoft intership taska
