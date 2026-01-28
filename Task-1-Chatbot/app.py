@@ -17,7 +17,7 @@ with st.sidebar:
     **Name:** Darshan Kotadiya  
     **Role:** MERN Stack & AI Research Intern  
     
-    [LinkedIn Profile](https://www.linkedin.com/in/darshankotadiya)  
+    [LinkedIn Profile](https://www.linkedin.com/in/darshan-kotadiya-70416a251/)  
     [GitHub Repository](https://github.com/darshankotadiya/CODSOFT)
     """)
     
