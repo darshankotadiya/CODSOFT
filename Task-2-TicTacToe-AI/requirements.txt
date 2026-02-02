@@ -1,0 +1,3 @@
+# No external libraries needed for core logic, 
+# but we will use 'pygame' or 'streamlit' later if you want a UI.
+streamlit
