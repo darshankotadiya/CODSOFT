@@ -2,7 +2,10 @@
 Nexus-AI is an advanced Tic-Tac-Toe game powered by the Minimax Algorithm, developed using Python. This project serves as a practical implementation of Artificial Intelligence and recursive decision-making logic.
 
 📑 Table of Contents
-Introduction
+Introductio
+
+🚀 Live Demo
+You can try the live application here: [https://darshan-tictactoe-ai.streamlit.app/]
 
 Key Features
 
