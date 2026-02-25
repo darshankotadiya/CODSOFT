@@ -1,9 +1,3 @@
-# ==========================================
-# PROJECT: AI MOVIE RECOMMENDER SYSTEM
-# DEVELOPER: DARSHAN KOTADIYA
-# ROLE: FULL STACK DEVELOPER
-# INTERNSHIP: CODSOFT TASK 4
-# ==========================================
 
 import streamlit as st
 import pandas as pd
@@ -31,53 +25,33 @@ def convert(text):
 @st.cache_resource
 def load_data():
     """
-    Loads pre-processed data if available, 
-    otherwise processes raw CSV files and saves them as pickle files.
+    Loads movies_dict.pkl and calculates similarity matrix live 
+    if the large similarity.pkl file is missing.
     """
-    # Check if pre-processed pickle files exist
-    if os.path.exists('movies_dict.pkl') and os.path.exists('similarity.pkl'):
-        movies_dict = pickle.load(open('movies_dict.pkl', 'rb'))
-        new_df = pd.DataFrame(movies_dict)
-        similarity = pickle.load(open('similarity.pkl', 'rb'))
-        return new_df, similarity
-
-    # Process raw CSV files from the 'archive' folder
     try:
-        movies = pd.read_csv('archive/tmdb_5000_movies.csv')
-        credits = pd.read_csv('archive/tmdb_5000_credits.csv')
+        # Check for movies_dict.pkl in your GitHub folder
+        # This handles both local and GitHub path structures
+        paths = ['Task-4-Recommendation-System/movies_dict.pkl', 'movies_dict.pkl']
+        file_path = next((p for p in paths if os.path.exists(p)), None)
         
-        # Merge datasets on 'title'
-        movies = movies.merge(credits, on='title')
-        
-        # Filter relevant columns
-        movies = movies[['movie_id', 'title', 'overview', 'genres', 'keywords', 'cast', 'crew']]
-        movies.dropna(inplace=True)
-        
-        # Clean metadata
-        movies['genres'] = movies['genres'].apply(convert)
-        movies['keywords'] = movies['keywords'].apply(convert)
-        
-        # Generate tags for content-based filtering
-        movies['tags'] = movies['overview'] + \
-                        movies['genres'].apply(lambda x: " ".join(x)) + \
-                        movies['keywords'].apply(lambda x: " ".join(x))
-        
-        new_df = movies[['movie_id', 'title', 'tags']]
-        new_df['tags'] = new_df['tags'].apply(lambda x: str(x).lower())
-        
-        # Vectorization using Scikit-Learn
+        if file_path is None:
+            st.error("movies_dict.pkl not found! Please ensure it is uploaded to your GitHub folder.")
+            return None, None
+
+        # Load the dictionary you already uploaded
+        movies_dict = pickle.load(open(file_path, 'rb'))
+        new_df = pd.DataFrame(movies_dict)
+
+        # LIVE CALCULATION: 
+        # Calculate similarity live on the server since similarity.pkl is too big to upload
         cv = CountVectorizer(max_features=5000, stop_words='english')
         vectors = cv.fit_transform(new_df['tags']).toarray()
         similarity = cosine_similarity(vectors)
-
-        # Save processed data for future high-speed loading
-        pickle.dump(new_df.to_dict(), open('movies_dict.pkl', 'wb'))
-        pickle.dump(similarity, open('similarity.pkl', 'wb'))
         
         return new_df, similarity
 
-    except FileNotFoundError:
-        st.error("Dataset not found! Please ensure 'archive' folder contains the TMDB CSV files.")
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
         return None, None
 
 # --- Recommendation Logic ---
